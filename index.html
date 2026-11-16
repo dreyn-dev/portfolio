@@ -485,7 +485,7 @@ function place(a,x,y,instant){a.x=x;a.y=y;if(instant){a.el.classList.add('free')
 function mode(a,m){a.el.innerHTML=m==='type'?BEAM:m==='idle'?CROSS(a.c):ARROW(a.c)}
 
 function lightZone(el){const z=el.closest('.zone');if(z)z.classList.add('lit')}
-function finishEl(el){restoreText(el);el.classList.remove('typing');el.classList.add('on','pop');lightZone(el);built++;tick();updHud();setTimeout(()=>el.classList.remove('pop'),500)}
+function finishEl(el){restoreText(el);el.style.minHeight='';el.style.minWidth='';el.classList.remove('typing');el.classList.add('on','pop');lightZone(el);built++;tick();updHud();setTimeout(()=>el.classList.remove('pop'),500)}
 
 function nextTask(){ // DOM order, gated by viewport frontier
   const limit=scrollY+innerHeight*0.92;
@@ -508,7 +508,7 @@ async function agentLoop(a){
     const s=document.createElement('div');s.className='sel';s.innerHTML='<i></i><i></i><i></i><i></i><span></span>';
     Object.assign(s.style,{left:p.x+'px',top:p.y+'px',width:p.w+'px',height:p.h+'px'});s.querySelector('span').textContent=`${Math.round(p.w)} × ${Math.round(p.h)}`;layer.appendChild(s);
     if(el.classList.contains('t')&&el._len){
-      mode(a,'type');el.classList.add('on','typing');lightZone(el);blankText(el);
+      mode(a,'type');el.style.minHeight=p.h+'px';el.style.minWidth=p.w+'px';el.classList.add('on','typing');lightZone(el);blankText(el);
       const dur=Math.min(2400,Math.max(650,el._len*24));const step=Math.max(1,Math.ceil(el._len/(dur/30)));let shown=0;
       while(shown<el._len&&running){shown=Math.min(el._len,shown+step);let left=shown;
         el._txt.forEach(([n,v])=>{const k=Math.max(0,Math.min(v.length,left));n.nodeValue=v.slice(0,k);left-=v.length});
@@ -521,10 +521,16 @@ async function agentLoop(a){
   }
 }
 
+let tourY=0,tourGoal=0;
 function tour(){ if(!running)return;
-  if(touring&&queue.length){const p=page(queue[0]);const target=Math.max(0,Math.min(p.y-innerHeight*.42,document.documentElement.scrollHeight-innerHeight));
-    const d=target-scrollY;if(Math.abs(d)>1)window.scrollTo(0,scrollY+d*0.022*Math.min(speed,2))}
-  else if(touring&&!queue.length){const end=document.documentElement.scrollHeight-innerHeight;const d=end-scrollY;if(Math.abs(d)>1)window.scrollTo(0,scrollY+d*.05)}
+  if(touring){const maxY=document.documentElement.scrollHeight-innerHeight;
+    let want=queue.length?page(queue[0]).y-innerHeight*.42:maxY;
+    want=Math.max(0,Math.min(want,maxY));
+    tourGoal=Math.max(tourGoal,want);            // never scroll back up
+    const d=tourGoal-tourY;
+    const step=Math.min(Math.max(d*0.018,0),2.2*Math.min(speed,2)); // eased + speed-capped
+    if(step>0.01){tourY+=step;window.scrollTo(0,tourY)}}
+  else{tourY=scrollY;tourGoal=scrollY}
   tourRAF=requestAnimationFrame(tour)}
 function stopTour(){touring=false;document.getElementById('tourBtn').classList.remove('on')}
 ['wheel','touchstart'].forEach(ev=>addEventListener(ev,()=>{if(running)stopTour()},{passive:true}));
@@ -542,7 +548,7 @@ function start(){
   document.querySelectorAll('.zone').forEach(z=>z.classList.remove('lit'));
   document.getElementById('nT').textContent=total;
   queue=els.slice();agents=[];running=true;touring=true;document.getElementById('tourBtn').classList.add('on');
-  body.classList.add('wf','pre','building');window.scrollTo(0,0);
+  body.classList.add('wf','pre','building');window.scrollTo(0,0);tourY=0;tourGoal=0;
   requestAnimationFrame(()=>requestAnimationFrame(()=>body.classList.remove('pre')));
   t0=performance.now();updHud();
   for(let i=0;i<18;i++){const a=makeAgent(i,true);agents.push(a);setTimeout(()=>agentLoop(a),400+i*120)}
@@ -574,7 +580,7 @@ function goLive(){running=false;clearInterval(addTimer);cancelAnimationFrame(tou
   setTimeout(()=>{cancelAnimationFrame(flockRAF);layer.innerHTML='';body.classList.remove('wf')},950);
   hud.classList.add('gone')}
 
-document.getElementById('tourBtn').onclick=e=>{touring=!touring;e.currentTarget.classList.toggle('on',touring)};
+document.getElementById('tourBtn').onclick=e=>{touring=!touring;tourY=scrollY;tourGoal=scrollY;e.currentTarget.classList.toggle('on',touring)};
 document.getElementById('spdBtn').onclick=e=>{speed=speed===1?2:speed===2?4:1;e.currentTarget.textContent=speed+'x'};
 document.getElementById('sndBtn').onclick=e=>{sound=!sound;document.getElementById('sndWave').setAttribute('d',sound?'M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14':'M23 9l-6 6M17 9l6 6');if(sound)tick()};
 document.getElementById('skipBtn').onclick=()=>{if(running){built=total;complete();goLive()}};
