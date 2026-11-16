@@ -521,9 +521,11 @@ async function agentLoop(a){
   }
 }
 
-let tourY=0,tourGoal=0;
+let tourY=0,tourGoal=0,photoReady=false,photoAt=0;
 function tour(){ if(!running)return;
-  if(touring){const maxY=document.documentElement.scrollHeight-innerHeight;
+  if(!photoReady){const pw=document.querySelector('.photo-wrap'),bd=document.querySelector('.badge');
+    if(pw.classList.contains('on')&&bd.classList.contains('on')){if(!photoAt)photoAt=performance.now();if(performance.now()-photoAt>1500/speed)photoReady=true}}
+  if(touring&&photoReady){const maxY=document.documentElement.scrollHeight-innerHeight;
     let want=queue.length?page(queue[0]).y-innerHeight*.42:maxY;
     want=Math.max(0,Math.min(want,maxY));
     tourGoal=Math.max(tourGoal,want);            // never scroll back up
@@ -548,7 +550,7 @@ function start(){
   document.querySelectorAll('.zone').forEach(z=>z.classList.remove('lit'));
   document.getElementById('nT').textContent=total;
   queue=els.slice();agents=[];running=true;touring=true;document.getElementById('tourBtn').classList.add('on');
-  body.classList.add('wf','pre','building');window.scrollTo(0,0);tourY=0;tourGoal=0;
+  body.classList.add('wf','pre','building');window.scrollTo(0,0);tourY=0;tourGoal=0;photoReady=false;photoAt=0;
   requestAnimationFrame(()=>requestAnimationFrame(()=>body.classList.remove('pre')));
   t0=performance.now();updHud();
   for(let i=0;i<18;i++){const a=makeAgent(i,true);agents.push(a);setTimeout(()=>agentLoop(a),400+i*120)}
