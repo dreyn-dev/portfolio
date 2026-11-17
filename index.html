@@ -194,7 +194,7 @@ footer{text-align:center;padding:60px 0 120px;font-size:11.5px;color:#55555b;lin
 .sel i{position:absolute;width:7px;height:7px;background:#fff;border:1.5px solid var(--blue)}
 .sel i:nth-child(1){left:-4px;top:-4px}.sel i:nth-child(2){right:-4px;top:-4px}.sel i:nth-child(3){left:-4px;bottom:-4px}.sel i:nth-child(4){right:-4px;bottom:-4px}
 .sel span{position:absolute;left:50%;transform:translateX(-50%);bottom:-24px;background:var(--blue);color:#fff;font-family:var(--mono);font-size:10px;padding:2px 6px;border-radius:3px;white-space:nowrap}
-.cur{position:absolute;left:0;top:0;width:22px;height:22px;transition:transform 1s cubic-bezier(.45,.05,.25,1),opacity .4s;will-change:transform;filter:drop-shadow(0 2px 4px rgba(0,0,0,.6))}
+.cur{position:absolute;left:0;top:0;width:22px;height:22px;transition:transform .75s cubic-bezier(.45,.05,.25,1),opacity .4s;will-change:transform;filter:drop-shadow(0 2px 4px rgba(0,0,0,.6))}
 .cur svg{width:22px;height:22px;display:block}
 .cur.fast{transition:transform .9s cubic-bezier(.3,.1,.2,1),opacity .4s}
 .cur.free{transition:none}
@@ -311,7 +311,7 @@ footer{text-align:center;padding:60px 0 120px;font-size:11.5px;color:#55555b;lin
   <div class="wrap">
     <span class="kicker b t">Architectural Showcase</span>
     <h2 class="b t">Flagship Deployments</h2>
-    <p class="sub b t">Production AI systems built and operated end to end: multi-agent workflows, generative media and LLM-assisted analysis.</p>
+    <p class="sub b t">A production multi-agent pipeline built and operated end to end.</p>
 
     <div class="flag b">
       <div class="meta b t">Hardware: Local GPU Workstation · Runtime: 24/7 · Output: 9:16</div>
@@ -330,29 +330,6 @@ footer{text-align:center;padding:60px 0 120px;font-size:11.5px;color:#55555b;lin
       <div class="layer b" id="layerBox"></div>
     </div>
 
-    <div class="three">
-      <div class="pcard b">
-        <span class="pill b t">LLM // Quant Analysis</span>
-        <h4 class="b t">MoonBot — LLM-Assisted Strategy Optimisation</h4>
-        <p class="b t">AI-assisted research loop for crypto futures strategies: parsing backtests and logs, proposing parameter changes and validating them.</p>
-        <ul><li class="b t">Backtest &amp; log analysis with LLMs</li><li class="b t">Documentation-grounded parameter tuning</li><li class="b t">24/7 automated execution</li></ul>
-        <div class="chips"><span class="chip b t">MoonBot</span><span class="chip b t">Backtests</span></div>
-      </div>
-      <div class="pcard b">
-        <span class="pill b t">LLM // Long-Context</span>
-        <h4 class="b t">Long-Form Writing Agent System</h4>
-        <p class="b t">Multi-agent system for writing book series: a canon knowledge base as memory, style rules and independent editor agents per chapter.</p>
-        <ul><li class="b t">Canon memory &amp; style rules</li><li class="b t">Writer → editor agent loop</li><li class="b t">Published on Amazon KDP</li></ul>
-        <div class="chips"><span class="chip b t">KDP</span><span class="chip b t">Editor Agents</span></div>
-      </div>
-      <div class="pcard b">
-        <span class="pill b t">App // Product</span>
-        <h4 class="b t">Zastolye — Recipe Calculator App</h4>
-        <p class="b t">Product prototype: pick dishes and servings — the app scales every ingredient across recipe variants and cooking methods.</p>
-        <ul><li class="b t">Servings → ingredients engine</li><li class="b t">Recipe variants &amp; methods</li><li class="b t">Self-serve product design</li></ul>
-        <div class="chips"><span class="chip b t">Prototype</span><span class="chip b t">Food-Tech</span></div>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -362,25 +339,21 @@ footer{text-align:center;padding:60px 0 120px;font-size:11.5px;color:#55555b;lin
     <h2 class="b t">The Systems Matrix</h2>
     <p class="sub b t">Specialised AI systems spanning agent orchestration, generative media and data engineering.</p>
     <div class="filters" id="filters">
-      <button class="tab act b" data-f="all">All Systems (12)</button>
+      <button class="tab act b" data-f="all">All Systems (8)</button>
       <button class="tab b" data-f="agents">Agentic AI</button>
       <button class="tab b" data-f="media">Generative Media</button>
       <button class="tab b" data-f="data">Data Engineering</button>
       <button class="tab b" data-f="systems">Systems</button>
     </div>
     <div class="mgrid">
-      <div class="mcard b" data-c="agents"><div class="row"><span class="cat b t">Agentic AI</span><span class="b t">#SYS-01</span></div><h4 class="b t">iSpotty Agent Team</h4><p class="b t">Eight role-based agents — art director, puzzle designer, illustrator, motion designer, testers, analyst — that build and QA hidden-object worlds.</p><div class="chips"><span class="chip b t">Multi-Agent</span><span class="chip b t">QA Testers</span></div></div>
-      <div class="mcard b" data-c="media"><div class="row"><span class="cat b t">Generative Media</span><span class="b t">#SYS-02</span></div><h4 class="b t">Lull Flow — Code-Rendered Physics</h4><p class="b t">Physics simulations, sorting visualisations and perfect loops generated fully in code, with procedural sound and auto-publishing.</p><div class="chips"><span class="chip b t">Python</span><span class="chip b t">Simulation</span></div></div>
-      <div class="mcard b" data-c="agents"><div class="row"><span class="cat b t">Agentic AI</span><span class="b t">#SYS-03</span></div><h4 class="b t">Oops, Death — Story Generation Agent</h4><p class="b t">Generates 20 story ideas per run, ranks them against channel concepts stored in Notion and writes the top picks as scripts.</p><div class="chips"><span class="chip b t">LLM</span><span class="chip b t">Notion API</span></div></div>
-      <div class="mcard b" data-c="media"><div class="row"><span class="cat b t">Generative Media</span><span class="b t">#SYS-04</span></div><h4 class="b t">Hungry Snaggle — Image-to-Video Pipeline</h4><p class="b t">Plot → start frame → single-shot AI video → sound, assembled into a ready CapCut project with upload metadata.</p><div class="chips"><span class="chip b t">Img2Video</span><span class="chip b t">CapCut</span></div></div>
-      <div class="mcard b" data-c="data"><div class="row"><span class="cat b t">Data Engineering</span><span class="b t">#SYS-05</span></div><h4 class="b t">Trend Radar — YouTube Trend Intelligence</h4><p class="b t">Trend research engine on the YouTube Data API and Scrapling that feeds every pipeline's idea backlog.</p><div class="chips"><span class="chip b t">YouTube API</span><span class="chip b t">Scrapling</span></div></div>
-      <div class="mcard b" data-c="agents"><div class="row"><span class="cat b t">Agentic AI</span><span class="b t">#SYS-06</span></div><h4 class="b t">Book-to-Skill Knowledge Extraction</h4><p class="b t">Turns books and documents into structured agent skills — frameworks, principles and anti-patterns an agent can apply on the job.</p><div class="chips"><span class="chip b t">Knowledge Base</span><span class="chip b t">Agent Skills</span></div></div>
-      <div class="mcard b" data-c="systems"><div class="row"><span class="cat b t">Systems</span><span class="b t">#SYS-07</span></div><h4 class="b t">DeskWall — Living Wallpaper for Windows</h4><p class="b t">Native Rust + Tauri 2 host attaches under the desktop icon layer via Win32/Shell API; a three.js WebGPU scene grows islands around the icons.</p><div class="chips"><span class="chip b t">Rust</span><span class="chip b t">WebGPU</span></div></div>
-      <div class="mcard b" data-c="data"><div class="row"><span class="cat b t">Data Engineering</span><span class="b t">#SYS-08</span></div><h4 class="b t">MoonStats — Trade Relay Bot</h4><p class="b t">Python bot that monitors public trading stats, filters large PnL events and posts them to a Telegram channel 24/7.</p><div class="chips"><span class="chip b t">Python</span><span class="chip b t">Telegram API</span></div></div>
-      <div class="mcard b" data-c="media"><div class="row"><span class="cat b t">Generative Media</span><span class="b t">#SYS-09</span></div><h4 class="b t">AI Video Repair Toolkit</h4><p class="b t">OpenCV scripts that fix generative-video artefacts: eye and mouth cleanup with inpainting, ghost dissolves, optical-flow loops.</p><div class="chips"><span class="chip b t">OpenCV</span><span class="chip b t">Optical Flow</span></div></div>
-      <div class="mcard b" data-c="media"><div class="row"><span class="cat b t">Generative Media</span><span class="b t">#SYS-10</span></div><h4 class="b t">Audio Mix &amp; Mastering Engine</h4><p class="b t">Automated mix: ducking music under voice, timed SFX map, harshness-filtered CC0 library, master to −14 LUFS.</p><div class="chips"><span class="chip b t">FFmpeg</span><span class="chip b t">DSP</span></div></div>
-      <div class="mcard b" data-c="systems"><div class="row"><span class="cat b t">Systems</span><span class="b t">#SYS-11</span></div><h4 class="b t">CapCut Project Automation</h4><p class="b t">Writes CapCut draft projects directly as JSON: synced cuts, captions, censoring, filters and SFX — no manual editing.</p><div class="chips"><span class="chip b t">Python</span><span class="chip b t">JSON Drafts</span></div></div>
-      <div class="mcard b" data-c="systems"><div class="row"><span class="cat b t">Systems</span><span class="b t">#SYS-12</span></div><h4 class="b t">Blender Procedural World Kit</h4><p class="b t">Headless Blender pipeline on a local RTX GPU: modular scene kit, crowd animation module and a 17-check auto-QA.</p><div class="chips"><span class="chip b t">Blender bpy</span><span class="chip b t">Auto-QA</span></div></div>
+      <div class="mcard b" data-c="agents"><div class="row"><span class="cat b t">Agentic AI</span><span class="b t">#SYS-01</span></div><h4 class="b t">iSpotty Agent Team</h4><p class="b t">Ten role-based agents — art director, designer, illustrator, testers, analyst — that build and QA hidden-object worlds.</p><div class="chips"><span class="chip b t">Multi-Agent</span><span class="chip b t">QA Agents</span></div></div>
+      <div class="mcard b" data-c="agents"><div class="row"><span class="cat b t">Agentic AI</span><span class="b t">#SYS-02</span></div><h4 class="b t">Story Generation Agent</h4><p class="b t">Generates story ideas, ranks them against channel concepts stored in Notion and writes the top picks as scripts.</p><div class="chips"><span class="chip b t">LLM</span><span class="chip b t">Notion API</span></div></div>
+      <div class="mcard b" data-c="agents"><div class="row"><span class="cat b t">Agentic AI</span><span class="b t">#SYS-03</span></div><h4 class="b t">Long-Form Writing Agents</h4><p class="b t">Book-series writing with canon memory, style rules and independent editor agents per chapter; published on KDP.</p><div class="chips"><span class="chip b t">Long-Context</span><span class="chip b t">Editor Agents</span></div></div>
+      <div class="mcard b" data-c="data"><div class="row"><span class="cat b t">Data Engineering</span><span class="b t">#SYS-04</span></div><h4 class="b t">LLM-Assisted Trading Research</h4><p class="b t">Parses backtests and trade logs, proposes strategy parameters and validates them on tick data for crypto futures.</p><div class="chips"><span class="chip b t">Python</span><span class="chip b t">Backtesting</span></div></div>
+      <div class="mcard b" data-c="data"><div class="row"><span class="cat b t">Data Engineering</span><span class="b t">#SYS-05</span></div><h4 class="b t">Trend Radar</h4><p class="b t">Trend-research engine on the YouTube Data API and Scrapling that feeds every pipeline's idea backlog.</p><div class="chips"><span class="chip b t">YouTube API</span><span class="chip b t">Scrapling</span></div></div>
+      <div class="mcard b" data-c="media"><div class="row"><span class="cat b t">Generative Media</span><span class="b t">#SYS-06</span></div><h4 class="b t">AI Video Repair Toolkit</h4><p class="b t">OpenCV tools that fix generative-video artefacts with inpainting, masking and optical-flow loops.</p><div class="chips"><span class="chip b t">OpenCV</span><span class="chip b t">Optical Flow</span></div></div>
+      <div class="mcard b" data-c="media"><div class="row"><span class="cat b t">Generative Media</span><span class="b t">#SYS-07</span></div><h4 class="b t">Blender Procedural World Kit</h4><p class="b t">Headless Blender pipeline on a local GPU: modular scene kit, crowd animation and a 17-check auto-QA.</p><div class="chips"><span class="chip b t">Blender bpy</span><span class="chip b t">Auto-QA</span></div></div>
+      <div class="mcard b" data-c="systems"><div class="row"><span class="cat b t">Systems</span><span class="b t">#SYS-08</span></div><h4 class="b t">DeskWall — Living Wallpaper</h4><p class="b t">Native Rust + Tauri 2 app on Win32/Shell API with a three.js WebGPU scene that grows islands around desktop icons.</p><div class="chips"><span class="chip b t">Rust</span><span class="chip b t">WebGPU</span></div></div>
     </div>
   </div>
 </section>
@@ -389,17 +362,9 @@ footer{text-align:center;padding:60px 0 120px;font-size:11.5px;color:#55555b;lin
   <div class="wrap">
     <span class="kicker b t">Technology Index</span>
     <h2 class="b t">The Tech Stack</h2>
-    <p class="sub b t">Everything used across these projects — from Python agents and generative models to Rust desktop code and GPU rendering.</p>
+    <p class="sub b t">The tools I use to design, build and ship AI systems.</p>
     <div class="sgrid">
-      <div class="scard wide b"><div class="sk b t">Core AI Engineering</div><div class="chips"><span class="chip b t">LLM APIs (Anthropic / OpenAI SDK)</span><span class="chip b t">Function Calling / Tool Use</span><span class="chip b t">RAG Pipelines</span><span class="chip b t">Embeddings</span><span class="chip b t">Vector DBs (pgvector, Qdrant)</span><span class="chip b t">LLM Evals</span><span class="chip b t">LangChain / LangGraph</span><span class="chip b t">Structured Outputs</span><span class="chip b t">FastAPI</span><span class="chip b t">Docker</span><span class="chip b t">REST APIs</span><span class="chip b t">CI/CD</span></div></div>
-      <div class="scard b"><div class="sk b t">Languages</div><div class="chips"><span class="chip b t">Python</span><span class="chip b t">Rust</span><span class="chip b t">TypeScript</span><span class="chip b t">JavaScript</span><span class="chip b t">HTML / CSS</span><span class="chip b t">TSL / GLSL Shaders</span><span class="chip b t">Bash</span></div></div>
-      <div class="scard b"><div class="sk b t">LLM &amp; Agents</div><div class="chips"><span class="chip b t">Claude Code</span><span class="chip b t">MCP Servers</span><span class="chip b t">Multi-Agent Orchestration</span><span class="chip b t">Subagents</span><span class="chip b t">Agent Skills</span><span class="chip b t">Prompt &amp; Context Eng.</span><span class="chip b t">QA / Reviewer Agents</span></div></div>
-      <div class="scard b"><div class="sk b t">Generative Models</div><div class="chips"><span class="chip b t">ElevenLabs TTS</span><span class="chip b t">Voice Cloning</span><span class="chip b t">Qwen TTS</span><span class="chip b t">Kling 4.0</span><span class="chip b t">Wan 3.0</span><span class="chip b t">Seedream 5.0</span><span class="chip b t">Seedance 2.0</span><span class="chip b t">GPT Image</span><span class="chip b t">Higgsfield</span></div></div>
-      <div class="scard b"><div class="sk b t">Vision &amp; Audio</div><div class="chips"><span class="chip b t">OpenCV</span><span class="chip b t">rembg / U²-Net</span><span class="chip b t">Optical Flow</span><span class="chip b t">Inpainting</span><span class="chip b t">FFmpeg</span><span class="chip b t">LUFS Mastering</span><span class="chip b t">Procedural Music</span></div></div>
-      <div class="scard b"><div class="sk b t">3D &amp; Graphics</div><div class="chips"><span class="chip b t">Blender 5 (bpy)</span><span class="chip b t">Headless GPU Render</span><span class="chip b t">three.js WebGPU</span><span class="chip b t">WebGL2</span><span class="chip b t">HTML Canvas</span><span class="chip b t">Procedural Generation</span><span class="chip b t">CC0 Asset Pipelines</span></div></div>
-      <div class="scard b"><div class="sk b t">Desktop &amp; Web</div><div class="chips"><span class="chip b t">Rust + Tauri 2</span><span class="chip b t">Win32 / Shell API</span><span class="chip b t">React 19</span><span class="chip b t">Tailwind CSS 4</span><span class="chip b t">pnpm + Turborepo</span><span class="chip b t">Biome</span><span class="chip b t">Playwright</span></div></div>
-      <div class="scard b"><div class="sk b t">Data &amp; APIs</div><div class="chips"><span class="chip b t">YouTube Data API</span><span class="chip b t">Scrapling</span><span class="chip b t">Notion API</span><span class="chip b t">Telegram Bot API</span><span class="chip b t">Binance Futures</span><span class="chip b t">Tick-Data Backtesting</span><span class="chip b t">GTM / GA4</span></div></div>
-      <div class="scard b"><div class="sk b t">Infra &amp; Tools</div><div class="chips"><span class="chip b t">Git / GitHub</span><span class="chip b t">GitHub Pages</span><span class="chip b t">VPS (Vultr)</span><span class="chip b t">Remote Render Watcher</span><span class="chip b t">CapCut Draft JSON</span><span class="chip b t">Windows Automation</span></div></div>
+      <div class="scard wide b"><div class="sk b t">Core Stack</div><div class="chips"><span class="chip b t">Python</span><span class="chip b t">Rust</span><span class="chip b t">TypeScript</span><span class="chip b t">LLM APIs (Anthropic / OpenAI)</span><span class="chip b t">Claude Code</span><span class="chip b t">MCP</span><span class="chip b t">Multi-Agent Systems</span><span class="chip b t">Function Calling</span><span class="chip b t">RAG</span><span class="chip b t">Embeddings &amp; Vector DBs</span><span class="chip b t">LLM Evals</span><span class="chip b t">Prompt &amp; Context Eng.</span><span class="chip b t">FastAPI</span><span class="chip b t">Docker</span><span class="chip b t">OpenCV</span><span class="chip b t">FFmpeg</span><span class="chip b t">Blender bpy</span><span class="chip b t">three.js / WebGPU</span><span class="chip b t">Tauri 2</span><span class="chip b t">Git / GitHub</span><span class="chip b t">REST APIs</span><span class="chip b t">Telegram Bot API</span></div></div>
     </div>
   </div>
 </section>
@@ -483,7 +448,7 @@ const avs=document.getElementById('avs');COLORS.slice(0,5).forEach(c=>{const i=d
 function tick(){if(!sound)return;try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();const o=actx.createOscillator(),g=actx.createGain();
   o.type='square';o.frequency.value=1600+Math.random()*900;g.gain.setValueAtTime(.025,actx.currentTime);g.gain.exponentialRampToValueAtTime(.0001,actx.currentTime+.04);
   o.connect(g).connect(actx.destination);o.start();o.stop(actx.currentTime+.05)}catch(e){}}
-const BASE=1.9,wait=ms=>new Promise(r=>setTimeout(r,ms*BASE/speed));
+const BASE=1.35,wait=ms=>new Promise(r=>setTimeout(r,ms*BASE/speed));
 let vOff=0;const mainEl=document.querySelector('main');
 const vy=()=>scrollY+vOff;
 function applyV(t){vOff=t-scrollY;const tf=vOff?`translate3d(0,${-vOff}px,0)`:'';mainEl.style.transform=tf;layer.style.transform=tf}
@@ -549,7 +514,7 @@ function tour(){ if(!running)return;
   if(!photoReady){const pw=document.querySelector('.photo-wrap'),bd=document.querySelector('.badge');
     if(pw.classList.contains('on')&&bd.classList.contains('on')){if(!photoAt)photoAt=performance.now();if(performance.now()-photoAt>1500/speed)photoReady=true}}
   if(touring&&photoReady){const maxY=document.documentElement.scrollHeight-innerHeight,now=performance.now();
-    while(recent.length&&now-recent[0][1]>1500/speed)recent.shift();
+    while(recent.length&&now-recent[0][1]>1100/speed)recent.shift();
     let anchor=Infinity;
     if(queue.length)anchor=page(queue[0]).y-innerHeight*.30;      // upcoming content in the lower part of the screen
     inflight.forEach(e=>{anchor=Math.min(anchor,page(e).y-120)});  // never hide what is being written
@@ -558,7 +523,7 @@ function tour(){ if(!running)return;
     const want=Math.max(0,Math.min(anchor,maxY));
     tourGoal=Math.max(tourGoal,want);
     const d=tourGoal-tourY;
-    tourV+= (Math.min(d*0.02,1.6*Math.min(speed,2))-tourV)*0.08;   // smooth velocity, no jerks
+    tourV+= (Math.min(d*0.03,3*Math.min(speed,2))-tourV)*0.07;   // smooth velocity, no jerks
     if(d<=0.05)tourV=0;
     if(tourV>0.001){tourY+=Math.min(tourV,d);applyV(tourY)}}
   tourRAF=requestAnimationFrame(tour)}
