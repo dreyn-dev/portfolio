@@ -238,7 +238,9 @@ footer{text-align:center;padding:60px 0 120px;font-size:11.5px;color:#55555b;lin
   .namebox{font-size:44px}
   .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
   .stat em{display:block;margin:0 0 4px}
-  #hud{gap:8px;font-size:11px}.bar{width:50px}
+  #hud{gap:7px;font-size:11px;padding:6px 7px;max-width:calc(100vw - 16px);bottom:12px}
+  #hud .avs,#hud .bar,#spdBtn{display:none}
+  .hb{padding:5px 8px}
 }
 </style>
 </head>
@@ -285,7 +287,7 @@ footer{text-align:center;padding:60px 0 120px;font-size:11.5px;color:#55555b;lin
         <div class="chips"><span class="chip b t">Python</span><span class="chip b t">Rust</span><span class="chip b t">TypeScript</span><span class="chip b t">Claude Code</span><span class="chip b t">MCP</span><span class="chip b t">Blender bpy</span><span class="chip b t">three.js</span><span class="chip b t">Tauri 2</span></div>
       </div>
     </div>
-    <div class="seclabel b t">//01.00 SEC_ABOUT INDEX [01 / 06]</div>
+    <div class="seclabel b t">//01.00 SEC_ABOUT INDEX [01 / 05]</div>
   </div>
 </section>
 
@@ -543,8 +545,8 @@ function start(){
   els.forEach(el=>{el.classList.remove('on','typing','reveal','pop');if(el.classList.contains('t')&&!el._txt)prepText(el);restoreText(el);el.style.setProperty('--d',(Math.random()*.9).toFixed(2)+'s')});
   document.querySelectorAll('.zone').forEach(z=>z.classList.remove('lit'));
   document.getElementById('nT').textContent=total;
-  queue=els.slice();const pf=[document.querySelector('.photo-wrap'),document.querySelector('.badge')];queue=queue.filter(e=>!pf.includes(e));queue.splice(1,0,...pf);agents=[];running=true;touring=true;document.getElementById('tourBtn').classList.add('on');
-  body.classList.add('wf','pre','building');window.scrollTo(0,0);tourY=0;tourGoal=0;tourV=0;photoReady=false;photoAt=0;inflight.clear();recent.length=0;vOff=0;mainEl.style.transform='';layer.style.transform='';
+  queue=els.slice();const pf=[document.querySelector('.photo-wrap'),document.querySelector('.badge')];const photoFirstScreen=innerWidth>=1100&&pf[0].getBoundingClientRect().top+scrollY+vOff<innerHeight*0.85;if(photoFirstScreen){queue=queue.filter(e=>!pf.includes(e));queue.splice(1,0,...pf)}agents=[];running=true;touring=true;document.getElementById('tourBtn').classList.add('on');
+  body.classList.add('wf','pre','building');window.scrollTo(0,0);tourY=0;tourGoal=0;tourV=0;photoReady=!photoFirstScreen;photoAt=0;inflight.clear();recent.length=0;vOff=0;mainEl.style.transform='';layer.style.transform='';
   requestAnimationFrame(()=>requestAnimationFrame(()=>body.classList.remove('pre')));
   t0=performance.now();updHud();
   for(let i=0;i<18;i++){const a=makeAgent(i,true);agents.push(a);setTimeout(()=>agentLoop(a),400+i*120)}
