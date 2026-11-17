@@ -184,7 +184,9 @@ footer{text-align:center;padding:60px 0 120px;font-size:11.5px;color:#55555b;lin
 .pre .b{opacity:0}
 .b{opacity:1;transition:opacity .3s ease var(--d,0s)}
 .b.pop{animation:pop .45s ease}
-@keyframes pop{0%{filter:brightness(2.2)}100%{filter:none}}
+@keyframes pop{0%{filter:brightness(1.6)}100%{filter:none}}
+.photo-wrap.reveal .photo img{animation:wipe 1.1s cubic-bezier(.3,.1,.2,1) both}
+@keyframes wipe{from{clip-path:inset(0 0 100% 0);opacity:.4}to{clip-path:inset(0 0 0 0);opacity:1}}
 .typing::after{content:"";display:inline-block;width:2px;height:1em;background:#fff;vertical-align:-2px;margin-left:2px;animation:blink .6s infinite}
 
 #layer{position:absolute;left:0;top:0;width:100%;height:0;z-index:60;pointer-events:none}
@@ -482,7 +484,12 @@ function tick(){if(!sound)return;try{actx=actx||new (window.AudioContext||window
   o.type='square';o.frequency.value=1600+Math.random()*900;g.gain.setValueAtTime(.025,actx.currentTime);g.gain.exponentialRampToValueAtTime(.0001,actx.currentTime+.04);
   o.connect(g).connect(actx.destination);o.start();o.stop(actx.currentTime+.05)}catch(e){}}
 const BASE=1.9,wait=ms=>new Promise(r=>setTimeout(r,ms*BASE/speed));
-const page=el=>{const r=el.getBoundingClientRect();return{x:r.left+scrollX,y:r.top+scrollY,w:r.width,h:r.height}};
+let vOff=0;const mainEl=document.querySelector('main');
+const vy=()=>scrollY+vOff;
+function applyV(t){vOff=t-scrollY;const tf=vOff?`translate3d(0,${-vOff}px,0)`:'';mainEl.style.transform=tf;layer.style.transform=tf}
+function commitV(){if(!vOff)return;const t=scrollY+vOff;vOff=0;mainEl.style.transform='';layer.style.transform='';window.scrollTo(0,t)}
+const page=el=>{const r=el.getBoundingClientRect();return{x:r.left+scrollX,y:r.top+vy(),w:r.width,h:r.height}};
+const inflight=new Set(),recent=[];
 
 function prepText(el){ // store text nodes for typing
   const nodes=[];const w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);let n;while(n=w.nextNode()){if(n.nodeValue.length)nodes.push([n,n.nodeValue])}
@@ -493,18 +500,18 @@ function restoreText(el){el._txt&&el._txt.forEach(([n,v])=>n.nodeValue=v)}
 function makeAgent(i,fromCenter){
   const c=COLORS[i%COLORS.length];const d=document.createElement('div');d.className='cur';d.innerHTML=ARROW(c);layer.appendChild(d);
   const a={el:d,c,x:0,y:0,busy:false};
-  const cx=scrollX+innerWidth/2,cy=scrollY+innerHeight/2;
+  const cx=scrollX+innerWidth/2,cy=vy()+innerHeight/2;
   if(fromCenter){place(a,cx+(Math.random()-.5)*40,cy+(Math.random()-.5)*40,true)}
-  else{place(a,scrollX+(Math.random()<.5?-30:innerWidth+30),scrollY+innerHeight*(.2+Math.random()*.6),true)}
+  else{place(a,scrollX+(Math.random()<.5?-30:innerWidth+30),vy()+innerHeight*(.2+Math.random()*.6),true)}
   return a}
 function place(a,x,y,instant){a.x=x;a.y=y;if(instant){a.el.classList.add('free');a.el.style.transform=`translate(${x}px,${y}px)`;void a.el.offsetWidth;a.el.classList.remove('free')}else a.el.style.transform=`translate(${x}px,${y}px)`}
 function mode(a,m){a.el.innerHTML=m==='type'?BEAM:m==='idle'?CROSS(a.c):ARROW(a.c)}
 
 function lightZone(el){const z=el.closest('.zone');if(z)z.classList.add('lit')}
-function finishEl(el){restoreText(el);el.style.minHeight='';el.style.minWidth='';el.classList.remove('typing');el.classList.add('on','pop');lightZone(el);built++;tick();updHud();setTimeout(()=>el.classList.remove('pop'),500)}
+function finishEl(el){inflight.delete(el);recent.push([el,performance.now()]);restoreText(el);el.style.minHeight='';el.style.minWidth='';el.classList.remove('typing');el.classList.add('on',el.classList.contains('photo-wrap')?'reveal':'pop');lightZone(el);built++;tick();updHud();setTimeout(()=>el.classList.remove('pop'),500)}
 
 function nextTask(){ // DOM order, gated by viewport frontier
-  const limit=scrollY+innerHeight*0.92;
+  const limit=vy()+innerHeight*0.92;
   for(let k=0;k<queue.length;k++){const el=queue[k];const p=page(el);
     if(p.w===0&&p.h===0){queue.splice(k,1);finishEl(el);k--;continue}
     if(p.y<limit){queue.splice(k,1);return el}
@@ -515,9 +522,9 @@ async function agentLoop(a){
   while(running){
     const el=nextTask();
     if(!el){ // wander
-      mode(a,'idle');place(a,scrollX+innerWidth*(.1+Math.random()*.8),scrollY+innerHeight*(.15+Math.random()*.7));
+      mode(a,'idle');place(a,scrollX+innerWidth*(.1+Math.random()*.8),vy()+innerHeight*(.15+Math.random()*.7));
       await wait(700+Math.random()*700);if(!queue.length&&running){mode(a,'arrow');break}continue}
-    mode(a,'arrow');let p=page(el);
+    mode(a,'arrow');inflight.add(el);let p=page(el);
     place(a,p.x+Math.min(p.w*.15+Math.random()*30,p.w-6),p.y+Math.min(10,p.h/2));
     await wait(680);if(!running)return;
     p=page(el);
@@ -537,20 +544,25 @@ async function agentLoop(a){
   }
 }
 
-let tourY=0,tourGoal=0,photoReady=false,photoAt=0;
+let tourY=0,tourGoal=0,tourV=0,photoReady=false,photoAt=0;
 function tour(){ if(!running)return;
   if(!photoReady){const pw=document.querySelector('.photo-wrap'),bd=document.querySelector('.badge');
     if(pw.classList.contains('on')&&bd.classList.contains('on')){if(!photoAt)photoAt=performance.now();if(performance.now()-photoAt>1500/speed)photoReady=true}}
-  if(touring&&photoReady){const maxY=document.documentElement.scrollHeight-innerHeight;
-    let want=queue.length?page(queue[0]).y-innerHeight*.42:maxY;
-    want=Math.max(0,Math.min(want,maxY));
-    tourGoal=Math.max(tourGoal,want);            // never scroll back up
+  if(touring&&photoReady){const maxY=document.documentElement.scrollHeight-innerHeight,now=performance.now();
+    while(recent.length&&now-recent[0][1]>1500/speed)recent.shift();
+    let anchor=Infinity;
+    if(queue.length)anchor=page(queue[0]).y-innerHeight*.30;      // upcoming content in the lower part of the screen
+    inflight.forEach(e=>{anchor=Math.min(anchor,page(e).y-120)});  // never hide what is being written
+    recent.forEach(([e])=>{anchor=Math.min(anchor,page(e).y-120)}); // keep just-finished content visible a moment
+    if(anchor===Infinity)anchor=maxY;
+    const want=Math.max(0,Math.min(anchor,maxY));
+    tourGoal=Math.max(tourGoal,want);
     const d=tourGoal-tourY;
-    const step=Math.min(Math.max(d*0.018,0),2.2*Math.min(speed,2)); // eased + speed-capped
-    if(step>0.01){tourY+=step;window.scrollTo(0,tourY)}}
-  else{tourY=scrollY;tourGoal=scrollY}
+    tourV+= (Math.min(d*0.02,1.6*Math.min(speed,2))-tourV)*0.08;   // smooth velocity, no jerks
+    if(d<=0.05)tourV=0;
+    if(tourV>0.001){tourY+=Math.min(tourV,d);applyV(tourY)}}
   tourRAF=requestAnimationFrame(tour)}
-function stopTour(){touring=false;document.getElementById('tourBtn').classList.remove('on')}
+function stopTour(){touring=false;commitV();tourY=scrollY;tourGoal=scrollY;tourV=0;document.getElementById('tourBtn').classList.remove('on')}
 ['wheel','touchstart'].forEach(ev=>addEventListener(ev,()=>{if(running)stopTour()},{passive:true}));
 addEventListener('keydown',e=>{if(running&&['ArrowDown','ArrowUp','PageDown','PageUp','Space',' '].includes(e.key))stopTour()});
 
@@ -562,18 +574,18 @@ function start(){
   cancelAnimationFrame(tourRAF);cancelAnimationFrame(flockRAF);clearInterval(addTimer);
   layer.innerHTML='';hud.className='';
   els=[...document.querySelectorAll('.b')];total=els.length;built=0;
-  els.forEach(el=>{el.classList.remove('on','typing');if(el.classList.contains('t')&&!el._txt)prepText(el);restoreText(el);el.style.setProperty('--d',(Math.random()*.9).toFixed(2)+'s')});
+  els.forEach(el=>{el.classList.remove('on','typing','reveal','pop');if(el.classList.contains('t')&&!el._txt)prepText(el);restoreText(el);el.style.setProperty('--d',(Math.random()*.9).toFixed(2)+'s')});
   document.querySelectorAll('.zone').forEach(z=>z.classList.remove('lit'));
   document.getElementById('nT').textContent=total;
   queue=els.slice();const pf=[document.querySelector('.photo-wrap'),document.querySelector('.badge')];queue=queue.filter(e=>!pf.includes(e));queue.splice(1,0,...pf);agents=[];running=true;touring=true;document.getElementById('tourBtn').classList.add('on');
-  body.classList.add('wf','pre','building');window.scrollTo(0,0);tourY=0;tourGoal=0;photoReady=false;photoAt=0;
+  body.classList.add('wf','pre','building');window.scrollTo(0,0);tourY=0;tourGoal=0;tourV=0;photoReady=false;photoAt=0;inflight.clear();recent.length=0;vOff=0;mainEl.style.transform='';layer.style.transform='';
   requestAnimationFrame(()=>requestAnimationFrame(()=>body.classList.remove('pre')));
   t0=performance.now();updHud();
   for(let i=0;i<18;i++){const a=makeAgent(i,true);agents.push(a);setTimeout(()=>agentLoop(a),400+i*120)}
   addTimer=setInterval(()=>{if(!running||agents.length>=28){clearInterval(addTimer);return}const a=makeAgent(agents.length,false);agents.push(a);updHud();agentLoop(a)},2600);
   tour()}
 
-function complete(){running=false;clearInterval(addTimer);
+function complete(){running=false;clearInterval(addTimer);commitV();
   const sec=((performance.now()-t0)/1000).toFixed(1);
   document.getElementById('dA').textContent=agents.length;document.getElementById('dT').textContent=sec+'s';
   hud.classList.add('done');body.classList.remove('building');
@@ -590,7 +602,7 @@ function flock(){ // swarm circling at the right edge
     flockRAF=requestAnimationFrame(loop)};
   setTimeout(loop,900)}
 
-function goLive(){running=false;clearInterval(addTimer);cancelAnimationFrame(tourRAF);
+function goLive(){running=false;clearInterval(addTimer);cancelAnimationFrame(tourRAF);commitV();
   els.forEach(el=>{restoreText(el);el.classList.remove('typing');el.classList.add('on')});
   document.querySelectorAll('.zone').forEach(z=>z.classList.add('lit'));
   body.classList.remove('pre','building');
@@ -598,7 +610,7 @@ function goLive(){running=false;clearInterval(addTimer);cancelAnimationFrame(tou
   setTimeout(()=>{cancelAnimationFrame(flockRAF);layer.innerHTML='';body.classList.remove('wf')},950);
   hud.classList.add('gone')}
 
-document.getElementById('tourBtn').onclick=e=>{touring=!touring;tourY=scrollY;tourGoal=scrollY;e.currentTarget.classList.toggle('on',touring)};
+document.getElementById('tourBtn').onclick=e=>{touring=!touring;commitV();tourY=scrollY;tourGoal=scrollY;tourV=0;e.currentTarget.classList.toggle('on',touring)};
 document.getElementById('spdBtn').onclick=e=>{speed=speed===1?2:speed===2?4:1;e.currentTarget.textContent=speed+'x'};
 document.getElementById('sndBtn').onclick=e=>{sound=!sound;document.getElementById('sndWave').setAttribute('d',sound?'M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14':'M23 9l-6 6M17 9l6 6');if(sound)tick()};
 document.getElementById('skipBtn').onclick=()=>{if(running){built=total;complete();goLive()}};
